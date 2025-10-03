@@ -4,17 +4,17 @@ def create_grid():
     width = int(input("Declare the width of the grid: "))
     height = int(input("Declare the height of the grid: "))
 
-    grid = [['~' for _ in range(width)] for _ in range(height)]
-
+    game_grid = [['~' for _ in range(width)] for _ in range(height)]
+    display_grid = [['~' for _ in range(width)] for _ in range(height)]
     # print("   " + " ".join(str(i) for i in range(width)))
 
     # for row_num in range(height):
     #     print(f"{row_num}  " + " ".join(["~"] * width))
     
-    return grid, width
+    return game_grid, display_grid, width
         
 
-def create_ship(grid, width):
+def create_ship(game_grid, display_grid, width):
     num_ship = 4
     ship = 's'
     
@@ -22,49 +22,53 @@ def create_ship(grid, width):
 
     for _ in range(num_ship):
         while True:
-            x = random.randint(0, len(grid) - 1)
-            y = random.randint(1, len(grid[0]) - 1)
+            x = random.randint(0, len(game_grid) - 1)
+            y = random.randint(1, len(game_grid[0]) - 1)
             
-            if grid[y][x] == '~':
-                grid[y][x] = ship
+            if game_grid[y][x] == '~':
+                game_grid[y][x] = ship
                 break
-            
-    for row_num, row in enumerate(grid):
+             
+    for row_num, row in enumerate(display_grid):
         print(f"{row_num}  " + " ".join(row))
-        
 
-def ouch(grid):
+def ouch(game_grid, display_grid):
     num_ships = 4
     while num_ships > 0:
         x_coord = input("Enter the x coords: ")
         y_coord = input("Enter the y coords: ")
         x = int(x_coord)
         y = int(y_coord)
-        # print(grid)
-        if (0 <= x < len(grid) and 0 <= y < len(grid[0])):  
+        # print(game_grid)
+        if (0 <= x < len(game_grid) and 0 <= y < len(game_grid[0])):  
         
-            if (grid[y][x] == 's'):
+            if (game_grid[y][x] == 's'):
                 num_ships -= 1 
                 print("THAT'S A HIT!!!") 
-                grid[y][x] = 'X'
-                # for row in grid:
+                game_grid[y][x] = 'X'
+                display_grid[y][x] = "X"
+                # for row in game_grid:
                 #     print(" ".join(row))
             
-            elif (grid[y][x] == '~'):
-                grid[y][x] = 'M'
+            elif (game_grid[y][x] == '~'):
+                game_grid[y][x] = 'M'
+                display_grid[y][x] = "M"
                 print("THAT'S A MISS!!!")
-                # for row in grid:
+                # for row in game_grid:
                 #     print(" ".join(row))   
 
-        print("\n   " + " ".join(str(i) for i in range(len(grid[0]))))  
-        for row_num, row in enumerate(grid):
+        print("\n   " + " ".join(str(i) for i in range(len(display_grid[0]))))  
+        for row_num, row in enumerate(display_grid):
+            # print(f"{row_num}" + "test")
+            # print(f"{row}" + "test")
             print(f"{row_num}  " + " ".join(row))  
-        
+        # print(f"{display_grid}" + "test-display_grid")
+        # print(f"{game_grid}" + "test-ame_grid")
     print("YOU WIN, ALL OF THE ENEMY HAS BEEN ELIMINATED.")
 
 
 if __name__ == "__main__":
     print("Battleships")
-    grid, width = create_grid()
-    create_ship(grid, width)
-    ouch(grid)
+    game_grid, display_grid, width = create_grid()
+    create_ship(game_grid, display_grid, width)
+    ouch(game_grid, display_grid)
