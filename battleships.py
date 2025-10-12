@@ -4,71 +4,93 @@ def create_grid():
     width = int(input("Declare the width of the grid: "))
     height = int(input("Declare the height of the grid: "))
 
-    game_grid = [['~' for _ in range(width)] for _ in range(height)]
-    display_grid = [['~' for _ in range(width)] for _ in range(height)]
-    # print("   " + " ".join(str(i) for i in range(width)))
-
-    # for row_num in range(height):
-    #     print(f"{row_num}  " + " ".join(["~"] * width))
+    opponent_game_grid = [['~' for _ in range(width)] for _ in range(height)]
+    opponent_display_grid = [['~' for _ in range(width)] for _ in range(height)]
+    player_display_grid = [['~' for _ in range(width)] for _ in range(height)]
     
-    return game_grid, display_grid, width
-        
+    
+    return opponent_game_grid, opponent_display_grid, player_display_grid, width
 
-def create_ship(game_grid, display_grid, width):
+def display_player_grid(player_display_grid, width):
+    print()
+    print("###############")
+    print("Player 1")
+    print("###############")
+    print(" " + " ".join(str(i) for i in range(width)))
+    for row_num, row in enumerate(player_display_grid):
+        print(f"{row_num} " + " ".join(row))
+
+def display_opponent_grid(opponent_display_grid, width):
+    print()
+    print("###############")
+    print("Player 2")
+    print("###############")
+    print(" " + " ".join(str(i) for i in range(width)))
+    for row_num, row in enumerate(opponent_display_grid):
+        print(f"{row_num} " + " ".join(row))
+
+def create_opponent_ship(opponent_game_grid, width):
     num_ship = 4
     ship = 's'
     
-    print("   " + " ".join(str(i) for i in range(width)))
+    print(" " + " ".join(str(i) for i in range(width)))
 
     for _ in range(num_ship):
         while True:
-            x = random.randint(0, len(game_grid) - 1)
-            y = random.randint(1, len(game_grid[0]) - 1)
+            y = random.randint(0, len(opponent_game_grid[0]) - 1)
+            x = random.randint(0, len(opponent_game_grid) - 1)
             
-            if game_grid[y][x] == '~':
-                game_grid[y][x] = ship
+            if opponent_game_grid[y][x] == '~':
+                opponent_game_grid[y][x] = ship
                 break
-             
-    for row_num, row in enumerate(display_grid):
-        print(f"{row_num}  " + " ".join(row))
 
-def ouch(game_grid, display_grid):
+def player_offence(opponent_game_grid, opponent_display_grid):
     num_ships = 4
+    turn_number = 1
+    
     while num_ships > 0:
+        print()
+        print("###############")
+        print(f"Turn {turn_number}: Player 1 Action")
+        print("###############")
         x_coord = input("Enter the x coords: ")
         y_coord = input("Enter the y coords: ")
+        print("###############")
         x = int(x_coord)
         y = int(y_coord)
-        # print(game_grid)
-        if (0 <= x < len(game_grid) and 0 <= y < len(game_grid[0])):  
+        if (0 <= x < len(opponent_game_grid) and 0 <= y < len(opponent_game_grid[0])):  
         
-            if (game_grid[y][x] == 's'):
+            if (opponent_game_grid[y][x] == 's'):
                 num_ships -= 1 
-                print("THAT'S A HIT!!!") 
-                game_grid[y][x] = 'X'
-                display_grid[y][x] = "X"
-                # for row in game_grid:
-                #     print(" ".join(row))
+                print()
+                print("###############")
+                print("THAT'S A HIT!!!")
+                print("###############")
+                print()
+                opponent_game_grid[y][x] = 'X'
+                opponent_display_grid[y][x] = "X"
+                turn_number += 1
             
-            elif (game_grid[y][x] == '~'):
-                game_grid[y][x] = 'M'
-                display_grid[y][x] = "M"
+            elif (opponent_game_grid[y][x] == '~'):
+                opponent_game_grid[y][x] = 'M'
+                opponent_display_grid[y][x] = "M"
+                print()
+                print("###############")
                 print("THAT'S A MISS!!!")
-                # for row in game_grid:
-                #     print(" ".join(row))   
-
-        print("\n   " + " ".join(str(i) for i in range(len(display_grid[0]))))  
-        for row_num, row in enumerate(display_grid):
-            # print(f"{row_num}" + "test")
-            # print(f"{row}" + "test")
+                print("###############")
+                print() 
+                turn_number += 1 
+                
+        print("\n   " + " ".join(str(i) for i in range(len(opponent_display_grid[0]))))  
+        for row_num, row in enumerate(opponent_display_grid):
             print(f"{row_num}  " + " ".join(row))  
-        # print(f"{display_grid}" + "test-display_grid")
-        # print(f"{game_grid}" + "test-ame_grid")
     print("YOU WIN, ALL OF THE ENEMY HAS BEEN ELIMINATED.")
 
 
 if __name__ == "__main__":
     print("Battleships")
-    game_grid, display_grid, width = create_grid()
-    create_ship(game_grid, display_grid, width)
-    ouch(game_grid, display_grid)
+    opponent_game_grid, opponent_display_grid, player_display_grid, width = create_grid()
+    display_player_grid(player_display_grid, width)
+    display_opponent_grid(opponent_display_grid, width)
+    create_opponent_ship(opponent_game_grid, width)
+    player_offence(opponent_game_grid, opponent_display_grid)
