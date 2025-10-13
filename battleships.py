@@ -32,28 +32,52 @@ def display_opponent_grid(opponent_display_grid):
         print(f"{display_num}" + " ".join(row))
  
     print(" " + " ".join(str(i) for i in range(GRID_SIZE)))
-    
-# create_aircraft_carrier():       
-# create_battleship():
-# create_destroyer():
-# create_cruiser():
-    
+ 
 def create_opponent_ship(opponent_game_grid):
-    num_ship = 4
-    ship = 's'
+    # num_ship = 4
+    # ship = 's'
     
-    for _ in range(num_ship):
+    # for _ in range(num_ship):
+    for ship, size in SHIPS.items():
         while True:
             y = random.randint(0, len(opponent_game_grid[0]) - 1)
             x = random.randint(0, len(opponent_game_grid) - 1)
-            
-            if opponent_game_grid[y][x] == '~':
-                opponent_game_grid[y][x] = ship
-                break
-    # print(opponent_game_grid)
+
+            is_vertical = random.choice([True, False])
+
+            if is_vertical:
+                if x + size > GRID_SIZE:
+                    continue
+
+                if '~' not in [opponent_game_grid[x + i][y] for i in range(size)]:
+                    continue
+
+                for i in range(size):
+                    opponent_game_grid[x + i][y] = ship[0]
+            else:
+                if y + size > GRID_SIZE:
+                    continue
+
+                if '~' not in [opponent_game_grid[x][y + i] for i in range(size)]:
+                    continue
+
+                for i in range(size):
+                    opponent_game_grid[x][y + i] = ship[0]
+
+            break 
+        
+        # print(opponent_game_grid)
+
+# def display_test_grid(grid):
+    # print("\n=== SHIP PLACEMENT TEST ===")
+    # for row_num, row in enumerate(grid):
+    #     display_num = GRID_SIZE - 1 - row_num
+    #     print(f"{display_num} " + " ".join(row))
+    # print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+    # print("===========================\n") 
     
 def player_offence(opponent_game_grid, opponent_display_grid):
-    num_ships = 4
+    num_ships = 14
     turn_number = 1
     
     while num_ships > 0:
@@ -69,8 +93,8 @@ def player_offence(opponent_game_grid, opponent_display_grid):
         y = GRID_SIZE - 1 - y_input
         if (0 <= x < len(opponent_game_grid) and 0 <= y < len(opponent_game_grid[0])):  
         
-            if (opponent_game_grid[y][x] == 's'):
-                num_ships -= 1 
+            if (opponent_game_grid[y][x] != '~'):
+                # num_ships -= 1 
                 print()
                 print("###############")
                 print("THAT'S A HIT!!!")
@@ -105,4 +129,5 @@ if __name__ == "__main__":
     display_player_grid(player_display_grid)
     display_opponent_grid(opponent_display_grid)
     create_opponent_ship(opponent_game_grid)
+    # display_test_grid(opponent_game_grid)
     player_offence(opponent_game_grid, opponent_display_grid)
