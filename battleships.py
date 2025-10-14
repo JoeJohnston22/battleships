@@ -77,24 +77,38 @@ def create_opponent_ship(opponent_game_grid):
     # print("===========================\n") 
     
 def player_offence(opponent_game_grid, opponent_display_grid):
-    num_ships = 14
+    total_ships_cells = sum(SHIPS.values())
+    hits = 0
     turn_number = 1
     
-    while num_ships > 0:
+    while hits != total_ships_cells:
         print()
         print("###############")
         print(f"Turn {turn_number}: Player 1 Action")
         print("###############")
         x_coord = input("Enter the x coords: ")
         y_coord = input("Enter the y coords: ")
-        print("###############")
-        x = int(x_coord)
-        y_input = int(y_coord)
+        print("###############")    
+        try: 
+            x_input = int(x_coord)
+            y_input = int(y_coord)
+            if not (0 <= x_input < GRID_SIZE and 0 <= y_input < GRID_SIZE):
+                print("Please enter a value that is present on the grid.")
+                continue
+        except ValueError:
+            print("Please enter a numeric value.")
+            continue
+        
+        x = x_input
         y = GRID_SIZE - 1 - y_input
         if (0 <= x < len(opponent_game_grid) and 0 <= y < len(opponent_game_grid[0])):  
-        
-            if (opponent_game_grid[y][x] != '~'):
-                # num_ships -= 1 
+     
+            if opponent_display_grid[y][x] == 'X' or opponent_display_grid[y][x] == 'M':
+                print("You've already fired at this location. Try somewhere new!")
+                continue
+            
+            elif (opponent_game_grid[y][x] != '~'):
+                hits += 1
                 print()
                 print("###############")
                 print("THAT'S A HIT!!!")
@@ -106,20 +120,20 @@ def player_offence(opponent_game_grid, opponent_display_grid):
             
             elif (opponent_game_grid[y][x] == '~'):
                 opponent_game_grid[y][x] = 'M'
-                opponent_display_grid[y][x] = "M"
+                opponent_display_grid[y][x] = 'M'
                 print()
                 print("###############")
                 print("THAT'S A MISS!!!")
                 print("###############")
                 print() 
                 turn_number += 1 
-                  
+            
         for row_num, row in enumerate(opponent_display_grid):
             display_num = GRID_SIZE - 1 - row_num
             print(f"{display_num}" + " ".join(row))
         
         print(" " + " ".join(str(i) for i in range(len(opponent_display_grid[0]))))
-        
+            
     print("YOU WIN, ALL OF THE ENEMY HAS BEEN ELIMINATED.")
 
 
