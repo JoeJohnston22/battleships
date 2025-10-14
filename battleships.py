@@ -34,10 +34,6 @@ def display_opponent_grid(opponent_display_grid):
     print(" " + " ".join(str(i) for i in range(GRID_SIZE)))
  
 def create_opponent_ship(opponent_game_grid):
-    # num_ship = 4
-    # ship = 's'
-    
-    # for _ in range(num_ship):
     for ship, size in SHIPS.items():
         while True:
             y = random.randint(0, len(opponent_game_grid[0]) - 1)
@@ -65,8 +61,6 @@ def create_opponent_ship(opponent_game_grid):
                     opponent_game_grid[x][y + i] = ship[0]
 
             break 
-        
-        # print(opponent_game_grid)
 
 # def display_test_grid(grid):
     # print("\n=== SHIP PLACEMENT TEST ===")
