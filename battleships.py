@@ -87,26 +87,28 @@ def create_player_ship(player_game_grid):
             # except ValueError:
             #     print("Please enter a numeric value.")
             #     continue
-            diagonol = input("Would you like the ship to be vertical? (yes or no): ") 
-            if diagonol == "yes":
+            ship_direction = input("Would you like the ship to be vertical? (yes or no): ") 
+            if ship_direction == "yes":
                 is_vertical = True
-            
-            if is_vertical:
-                if x + size > GRID_SIZE:
-                    continue
+                    
+                if is_vertical:
+                    if x + size > GRID_SIZE:
+                        continue
 
-                if '~' not in [player_game_grid[x + i][y] for i in range(size)]:
-                    continue
+                    if '~' not in [player_game_grid[x + i][y] for i in range(size)]:
+                        continue
 
-                for i in range(size):
-                    player_game_grid[x + i][y] = ship[0]
+                    for i in range(size):
+                        player_game_grid[x + i][y] = ship[0]
+                    
+                    for row_num, row in enumerate(player_game_grid):
+                        display_num = GRID_SIZE - 1 - row_num
+                        print(f"{display_num} " + " ".join(row))
+                    print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+                    
+            if ship_direction == "no":
+                is_vertical = False
                 
-                for row_num, row in enumerate(player_game_grid):
-                    display_num = GRID_SIZE - 1 - row_num
-                    print(f"{display_num} " + " ".join(row))
-                print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
-                
-            else:
                 if y + size > GRID_SIZE:
                     continue
 
@@ -120,8 +122,8 @@ def create_player_ship(player_game_grid):
                     display_num = GRID_SIZE - 1 - row_num
                     print(f"{display_num} " + " ".join(row))
                 print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
-                    
-            break 
+                        
+                break 
                 
 def player_offence(opponent_game_grid, opponent_display_grid):
     total_ships_cells = sum(SHIPS.values())
