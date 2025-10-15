@@ -74,9 +74,10 @@ def create_opponent_ship(opponent_game_grid):
 def create_player_ship(player_game_grid):
     for ship, size in SHIPS.items():
         while True:
-            y = random.randint(0, len(player_game_grid[0]) - 1)
+            y = input("Enter the y coords for ship placement: ")
             x = input("Enter the x coords for ship placement: ")
             
+            y = int(y)
             x = int(x)
             # try: 
             #     x_input = int(x)
