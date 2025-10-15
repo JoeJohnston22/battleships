@@ -72,13 +72,20 @@ def create_opponent_ship(opponent_game_grid):
     # print("===========================\n") 
 
 def create_player_ship(player_game_grid):
+    for row_num, row in enumerate(player_game_grid):
+        display_num = GRID_SIZE - 1 - row_num
+        print(f"{display_num} " + " ".join(row))
+        
+    print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+    
     for ship, size in SHIPS.items():
         while True:
-            y = input("Enter the y coords for ship placement: ")
             x = input("Enter the x coords for ship placement: ")
+            y = input("Enter the y coords for ship placement: ")
             
-            y = int(y)
             x = int(x)
+            y = int(y)
+            y = GRID_SIZE - 1 - y
             # try: 
             #     x_input = int(x)
             #     if not (0 <= x_input < GRID_SIZE):
@@ -95,11 +102,11 @@ def create_player_ship(player_game_grid):
                     if x + size > GRID_SIZE:
                         continue
 
-                    if '~' not in [player_game_grid[x + i][y] for i in range(size)]:
+                    if '~' not in [player_game_grid[y + i][x] for i in range(size)]:
                         continue
 
                     for i in range(size):
-                        player_game_grid[x + i][y] = ship[0]
+                        player_game_grid[y + i][x] = ship[0]
                     
                     for row_num, row in enumerate(player_game_grid):
                         display_num = GRID_SIZE - 1 - row_num
