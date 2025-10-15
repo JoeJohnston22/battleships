@@ -6,10 +6,11 @@ SHIPS = {"Cruiser": 2,"Destroyer": 3, "Battleship": 4,"Aircraft Carrier": 5}
 def create_grid():
     opponent_game_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
     opponent_display_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
+    player_game_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
     player_display_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
     
     
-    return opponent_game_grid, opponent_display_grid, player_display_grid
+    return opponent_game_grid, opponent_display_grid, player_game_grid, player_display_grid
 
 def display_player_grid(player_display_grid):
     print()
@@ -69,7 +70,58 @@ def create_opponent_ship(opponent_game_grid):
     #     print(f"{display_num} " + " ".join(row))
     # print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
     # print("===========================\n") 
-    
+
+def create_player_ship(player_game_grid):
+    for ship, size in SHIPS.items():
+        while True:
+            y = random.randint(0, len(player_game_grid[0]) - 1)
+            x = input("Enter the x coords for ship placement: ")
+            
+            x = int(x)
+            # try: 
+            #     x_input = int(x)
+            #     if not (0 <= x_input < GRID_SIZE):
+            #         print("Please enter a value that is present on the grid.")
+            #     continue
+            # except ValueError:
+            #     print("Please enter a numeric value.")
+            #     continue
+            diagonol = input("Would you like the ship to be vertical? (yes or no): ") 
+            if diagonol == "yes":
+                is_vertical = True
+            
+            if is_vertical:
+                if x + size > GRID_SIZE:
+                    continue
+
+                if '~' not in [player_game_grid[x + i][y] for i in range(size)]:
+                    continue
+
+                for i in range(size):
+                    player_game_grid[x + i][y] = ship[0]
+                
+                for row_num, row in enumerate(player_game_grid):
+                    display_num = GRID_SIZE - 1 - row_num
+                    print(f"{display_num} " + " ".join(row))
+                print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+                
+            else:
+                if y + size > GRID_SIZE:
+                    continue
+
+                if '~' not in [player_game_grid[x][y + i] for i in range(size)]:
+                    continue
+
+                for i in range(size):
+                    player_game_grid[x][y + i] = ship[0]
+
+                for row_num, row in enumerate(player_game_grid):
+                    display_num = GRID_SIZE - 1 - row_num
+                    print(f"{display_num} " + " ".join(row))
+                print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+                    
+            break 
+                
 def player_offence(opponent_game_grid, opponent_display_grid):
     total_ships_cells = sum(SHIPS.values())
     hits = 0
@@ -133,9 +185,10 @@ def player_offence(opponent_game_grid, opponent_display_grid):
 
 if __name__ == "__main__":
     print("Battleships")
-    opponent_game_grid, opponent_display_grid, player_display_grid = create_grid()
-    display_player_grid(player_display_grid)
-    display_opponent_grid(opponent_display_grid)
-    create_opponent_ship(opponent_game_grid)
+    opponent_game_grid, opponent_display_grid, player_game_grid, player_display_grid = create_grid()
+    # display_player_grid(player_display_grid)
+    # display_opponent_grid(opponent_display_grid)
+    # create_opponent_ship(opponent_game_grid)
+    create_player_ship(player_game_grid)
     # display_test_grid(opponent_game_grid)
-    player_offence(opponent_game_grid, opponent_display_grid)
+    # player_offence(opponent_game_grid, opponent_display_grid)
