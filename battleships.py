@@ -1,11 +1,11 @@
 import random
 
 GRID_SIZE = 10
-SHIPS = [("Cruiser", 2),
-         ("Cruiser", 2),
-         ("Destroyer", 3), 
-         ("Battleship", 4),
-         ("Aircraft Carrier", 5)]
+SHIPS = [("Destroyer", 2),
+         ("Submarine", 3),
+         ("Cruiser", 3), 
+         ("Battleship", 5),
+         ("Aircraft Carrier", 6)]
 
 def create_grid():
     opponent_game_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
@@ -47,32 +47,32 @@ def create_opponent_ship(opponent_game_grid):
             is_vertical = random.choice([True, False])
 
             if is_vertical:
-                if x + size > GRID_SIZE:
-                    continue
-
-                if '~' not in [opponent_game_grid[x + i][y] for i in range(size)]:
-                    continue
-
-                for i in range(size):
-                    opponent_game_grid[x + i][y] = ship[0]
-            else:
                 if y + size > GRID_SIZE:
                     continue
 
-                if '~' not in [opponent_game_grid[x][y + i] for i in range(size)]:
+                if not all(opponent_game_grid[y + i][x] == '~' for i in range(size)):
                     continue
 
                 for i in range(size):
-                    opponent_game_grid[x][y + i] = ship[0]
+                    opponent_game_grid[y + i][x] = ship[0]
+            else:
+                if x + size > GRID_SIZE:
+                    continue
+
+                if not all(opponent_game_grid[y][x + i] == '~' for i in range(size)):
+                    continue
+
+                for i in range(size):
+                    opponent_game_grid[y][x + i] = ship[0]
             break 
 
-# def display_test_grid(grid):
-    # print("\n=== SHIP PLACEMENT TEST ===")
-    # for row_num, row in enumerate(grid):
-    #     display_num = GRID_SIZE - 1 - row_num
-    #     print(f"{display_num} " + " ".join(row))
-    # print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
-    # print("===========================\n") 
+def display_test_grid(grid):
+    print("\n=== SHIP PLACEMENT TEST ===")
+    for row_num, row in enumerate(grid):
+        display_num = GRID_SIZE - 1 - row_num
+        print(f"{display_num} " + " ".join(row))
+    print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
+    print("===========================\n") 
 
 def create_player_ship(player_game_grid):
     for row_num, row in enumerate(player_game_grid):
@@ -202,6 +202,6 @@ if __name__ == "__main__":
     # display_player_grid(player_display_grid)
     # display_opponent_grid(opponent_display_grid)
     create_opponent_ship(opponent_game_grid)
-    create_player_ship(player_game_grid)
-    # display_test_grid(opponent_game_grid)
+    # create_player_ship(player_game_grid)
+    display_test_grid(opponent_game_grid)
     player_offence(opponent_game_grid, opponent_display_grid)
