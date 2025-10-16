@@ -1,7 +1,11 @@
 import random
 
 GRID_SIZE = 10
-SHIPS = {"Cruiser": 2,"Destroyer": 3, "Battleship": 4,"Aircraft Carrier": 5}
+SHIPS = [("Cruiser", 2),
+         ("Cruiser", 2),
+         ("Destroyer", 3), 
+         ("Battleship", 4),
+         ("Aircraft Carrier", 5)]
 
 def create_grid():
     opponent_game_grid = [['~'] * GRID_SIZE for _ in range(GRID_SIZE)]
@@ -35,7 +39,7 @@ def display_opponent_grid(opponent_display_grid):
     print(" " + " ".join(str(i) for i in range(GRID_SIZE)))
  
 def create_opponent_ship(opponent_game_grid):
-    for ship, size in SHIPS.items():
+    for ship, size in SHIPS:
         while True:
             y = random.randint(0, len(opponent_game_grid[0]) - 1)
             x = random.randint(0, len(opponent_game_grid) - 1)
@@ -60,7 +64,6 @@ def create_opponent_ship(opponent_game_grid):
 
                 for i in range(size):
                     opponent_game_grid[x][y + i] = ship[0]
-
             break 
 
 # def display_test_grid(grid):
@@ -78,62 +81,62 @@ def create_player_ship(player_game_grid):
         
     print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
     
-    for ship, size in SHIPS.items():
+    for ship, size in SHIPS:
         while True:
+            print(f"Placing {ship}, size: {size}")
             x = input("Enter the x coords for ship placement: ")
             y = input("Enter the y coords for ship placement: ")
+            try: 
+                x = int(x)
+                y = int(y)
+                if not (0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE):
+                    print("Please enter a value that is present on the grid.")
+                    continue
+            except ValueError:
+                print("Please enter a numeric value.")
+                continue
             
-            x = int(x)
-            y = int(y)
             y = GRID_SIZE - 1 - y
-            # try: 
-            #     x_input = int(x)
-            #     if not (0 <= x_input < GRID_SIZE):
-            #         print("Please enter a value that is present on the grid.")
-            #     continue
-            # except ValueError:
-            #     print("Please enter a numeric value.")
-            #     continue
             ship_direction = input("Would you like the ship to be vertical? (yes or no): ") 
             if ship_direction == "yes":
-                is_vertical = True
-                    
-                if is_vertical:
-                    if x + size > GRID_SIZE:
-                        continue
-
-                    if '~' not in [player_game_grid[y + i][x] for i in range(size)]:
-                        continue
-
-                    for i in range(size):
-                        player_game_grid[y + i][x] = ship[0]
-                    
-                    for row_num, row in enumerate(player_game_grid):
-                        display_num = GRID_SIZE - 1 - row_num
-                        print(f"{display_num} " + " ".join(row))
-                    print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
-                    
-            if ship_direction == "no":
-                is_vertical = False
-                
                 if y + size > GRID_SIZE:
+                    print(f"The ship doesn't fit. Not enough space vertically from position: {x}, {GRID_SIZE - 1 - y}")
                     continue
 
-                if '~' not in [player_game_grid[x][y + i] for i in range(size)]:
+                if not all(player_game_grid[y + i][x] == '~' for i in range(size)):
+                    print("Ship overlaps with another ships. Choose a different location.")
                     continue
 
                 for i in range(size):
-                    player_game_grid[x][y + i] = ship[0]
-
+                    player_game_grid[y + i][x] = ship[0]
+                
                 for row_num, row in enumerate(player_game_grid):
                     display_num = GRID_SIZE - 1 - row_num
                     print(f"{display_num} " + " ".join(row))
                 print("  " + " ".join(str(i) for i in range(GRID_SIZE)))
-                        
+                break
+            
+            elif ship_direction == "no":
+                
+                if x + size > GRID_SIZE:
+                    print(f"The ship doesn't fit. Not enough space horizontally from position: {x}, {GRID_SIZE - 1 - y}")
+                    continue
+
+                if not all(player_game_grid[y][x + i] == '~' for i in range(size)):
+                    print("Ship overlaps with another ships. Choose a different location.")
+                    continue
+
+                for i in range(size):
+                    player_game_grid[y][x + i] = ship[0]
+
+                for row_num, row in enumerate(player_game_grid):
+                    display_num = GRID_SIZE - 1 - row_num
+                    print(f"{display_num} " + " ".join(row))
+                print("  " + " ".join(str(i) for i in range(GRID_SIZE)))     
                 break 
                 
 def player_offence(opponent_game_grid, opponent_display_grid):
-    total_ships_cells = sum(SHIPS.values())
+    total_ships_cells = sum(size for ships, size in SHIPS)
     hits = 0
     turn_number = 1
     
@@ -198,7 +201,7 @@ if __name__ == "__main__":
     opponent_game_grid, opponent_display_grid, player_game_grid, player_display_grid = create_grid()
     # display_player_grid(player_display_grid)
     # display_opponent_grid(opponent_display_grid)
-    # create_opponent_ship(opponent_game_grid)
+    create_opponent_ship(opponent_game_grid)
     create_player_ship(player_game_grid)
     # display_test_grid(opponent_game_grid)
-    # player_offence(opponent_game_grid, opponent_display_grid)
+    player_offence(opponent_game_grid, opponent_display_grid)
